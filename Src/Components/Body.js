@@ -1,4 +1,3 @@
-import { RestraurentList } from "../config";
 import RestaurantCard from "./RestraurantCard";
 import { useState, useEffect } from "react";
 import Shimmer from "./shimmer";
@@ -8,6 +7,7 @@ import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import { filterData } from "../../utils/helper";
 import { GET_RESTAURANTS } from "../config";
 import useOnline from "../../utils/useOnline";
+import { mockRestaurantsList } from "../mocks/restaurants";
 
 
 
@@ -25,16 +25,52 @@ const Body = () => {
     }, []);
 
     async function getRestraurants() {
-       const data = await fetch (GET_RESTAURANTS);
-       const json = await data.json();
-       console.log(json);
-       //optional chaining
-       setallRestaurants(json?.data?.cards[1]?.card?.card?.
-        gridElements?.infoWithStyle?.restaurants);
+       try {
+         const data = await fetch(GET_RESTAURANTS);
+         if (!data.ok) {
+           throw new Error(`HTTP ${data.status}: ${data.statusText}`);
+         }
+         const json = await data.json();
+         const categories = json?.categories?.filter((category) => category.strCategory !== "Beef");
+         let restaurants = [];
 
-        setfilteredRestaurants(json?.data?.cards[1]?.card?.card?.
-          gridElements?.infoWithStyle?.restaurants);
-};
+         if (categories && categories.length > 0) {
+           restaurants = categories.slice(0, 10).map((category, index) => ({
+             info: {
+               id: String(550055 + index),
+               name: category.strCategory,
+               cloudinaryImageId: category.strCategoryThumb,
+               locality: category.strCategory,
+               areaName: category.strCategory,
+               costForTwo: "₹300 for two",
+               cuisines: [category.strCategory],
+               avgRating: 4.2,
+               parentId: String(10000 + index),
+               avgRatingString: "4.2",
+               totalRatingsString: `${1000 + index * 100}+`,
+               promoted: false,
+             },
+           }));
+         } else {
+           const oldRestaurants = json?.data?.cards?.[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants;
+           if (oldRestaurants && oldRestaurants.length > 0) {
+             restaurants = oldRestaurants;
+           }
+         }
+
+         if (restaurants.length === 0) {
+           throw new Error("No categories in response");
+         }
+
+         setallRestaurants(restaurants);
+         setfilteredRestaurants(restaurants);
+       } catch (error) {
+         console.warn("Failed to fetch restaurants from API, using mock data:", error);
+         const mockRestaurants = mockRestaurantsList?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle?.restaurants;
+         setallRestaurants(mockRestaurants || []);
+         setfilteredRestaurants(mockRestaurants || []);
+       }
+    };
   
  const statusOnline = useOnline();
  if(!statusOnline) {

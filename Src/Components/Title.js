@@ -50,7 +50,7 @@ const Header = () => {
           </Link>
           <Link to="/cart">
           
-            <li data-testid = "cartTest">My-Cart {cartItems.length}</li>
+            <li data-testid = "cartTest">Cart {cartItems.length}</li>
           </Link>
         </ul>
       </div>

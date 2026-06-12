@@ -1,10 +1,25 @@
-export const img_cdn_url = 
-        "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/";
+export const img_cdn_url =
+  "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_660/";
 
+export const FETCH_MENU_URL =
+  "https://www.themealdb.com/api/json/v1/1/filter.php?c=";
 
-export const FETCH_MENU_URL = "https://www.swiggy.com/dapi/menu/pl?page-type=REGULAR_MENU&complete-menu=true&lat=18.9690247&lng=72.8205292&restaurantId=683064&catalog_qa=undefined&submitAction=ENTER";
+export const RESTAURANT_CATEGORY_MAP = {
+  "550055": "Chicken",
+  "550056": "Vegetarian",
+  "550057": "Seafood",
+  "550058": "Chicken",
+  "550059": "Chicken",
+  "550060": "Vegetarian",
+  "550061": "Chicken",
+  "550062": "Dessert",
+  "550063": "Vegetarian",
+  "550064": "Vegetarian",
+  "565580": "Vegetarian",
+};
 
-export const GET_RESTAURANTS = "https://www.swiggy.com/dapi/restaurants/list/v5?lat=18.9690247&lng=72.8205292&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING";
+export const GET_RESTAURANTS =
+  "https://www.themealdb.com/api/json/v1/1/categories.php";
 
 //  export const RestraurentList = [
 //             {
