@@ -29,6 +29,7 @@ const RestauFood = () => {
 
   const addFooditem = (item) => {
     const normalizedData = normalizeItem(item.card.info);
+    console.log("Adding to cart:", normalizedData);
     dispatch(addItem(normalizedData));
   };
 
@@ -153,6 +154,7 @@ const RestauFood = () => {
                       </div>
                     </div>
                     <button
+                      type="button"
                       onClick={() => addFooditem(item)}
                       className="h-12 rounded-3xl bg-lime-500 text-white font-semibold transition hover:bg-lime-600"
                     >

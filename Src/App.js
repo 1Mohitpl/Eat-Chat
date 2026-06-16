@@ -6,6 +6,7 @@ import Footer from "./Components/Footer";
 import { createBrowserRouter, RouterProvider, Outlet } from "react-router-dom";
 import About from "./Components/about";
 import Cart from "./Components/Cart";
+import Checkout from "./Components/Checkout";
 import Error from "./Components/Error";
 import Contact from "./Components/Contact";
 import RestauFood from "./Components/RestauFood";
@@ -62,6 +63,11 @@ const appRouter = createBrowserRouter([
       {
         path: "cart", // lowercase path
         element: <Cart/>,
+      },
+
+      {
+        path: "checkout", // lowercase path
+        element: <Checkout/>,
       },
 
       {
