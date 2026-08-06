@@ -1,4 +1,4 @@
-import React, { lazy, Suspense, useState } from "react";
+import React, { lazy, Suspense } from "react";
 import ReactDOM from "react-dom/client";
 import Header from "./Components/Title";
 import Body from "./Components/Body";
@@ -16,7 +16,19 @@ import Careers from "./Components/Careers";
 import InstaFresh from "./Components/Instamart";
 import {Provider} from "react-redux";
 import store from "../utils/store";
-import FoodCard from "./Components/Foodcard";
+import Login from "./Components/Login";
+import Account from "./Components/Account";
+import ProtectedRoute from "./Components/ProtectedRoute";
+import { UserProvider } from "../utils/UserContext";
+
+/* Register service worker for PWA / offline support */
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register(new URL("../sw.js", import.meta.url)).catch((err) => {
+      console.warn("Service worker registration failed:", err);
+    });
+  });
+}
 
 
 
@@ -27,17 +39,41 @@ const Instamart = lazy ( () => import ("./Components/Instamart"));   // dynamic 
 const AppLayout = () => {
   return (
     <Provider store = {store}> 
+    <UserProvider>
     <>
       <Header />
-      <Outlet />
+      <main className="app-shell">
+        <Outlet />
+      </main>
       <Footer />
    
     </>
+    </UserProvider>
+    </Provider>
+  );
+};
+
+const AuthLayout = () => {
+  return (
+    <Provider store = {store}> 
+    <UserProvider>
+      <Outlet />
+    </UserProvider>
     </Provider>
   );
 };
 
 const appRouter = createBrowserRouter([
+{
+    path: "/login",
+    element: <AuthLayout />,
+    children: [
+      {
+        path: "", // lowercase path
+        element: <Login/>,
+      },
+    ],
+  },
 {
     path: "/",
     element: <AppLayout />,
@@ -45,12 +81,12 @@ const appRouter = createBrowserRouter([
     children: [
       {
         path: "/", // lowercase path
-        element: <Body />,
+        element: <ProtectedRoute><Body /></ProtectedRoute>,
         
       },
       {
         path: "about", // lowercase path
-        element: <About />,
+        element: <ProtectedRoute><About /></ProtectedRoute>,
         children : [{
           path : "profile",   // parentpath/{path} locahost:123/about/profile 
           element:<Profile />
@@ -58,21 +94,26 @@ const appRouter = createBrowserRouter([
       },
       {
         path: "contact", // lowercase path
-        element: <Contact />,
+        element: <ProtectedRoute><Contact /></ProtectedRoute>,
       },
       {
         path: "cart", // lowercase path
-        element: <Cart/>,
+        element: <ProtectedRoute><Cart/></ProtectedRoute>,
       },
 
       {
         path: "checkout", // lowercase path
-        element: <Checkout/>,
+        element: <ProtectedRoute><Checkout/></ProtectedRoute>,
+      },
+
+      {
+        path: "account", // lowercase path
+        element: <Account/>,
       },
 
       {
         path: "careers", // lowercase path 
-        element: < Careers/>,
+        element: <ProtectedRoute><Careers/></ProtectedRoute>,
       },
 
       {
@@ -86,7 +127,7 @@ const appRouter = createBrowserRouter([
 
       {
         path: "/restaurant/:resid", // lowercase path
-        element: <RestauFood />,
+        element: <ProtectedRoute><RestauFood /></ProtectedRoute>,
       },    
     ],
   },

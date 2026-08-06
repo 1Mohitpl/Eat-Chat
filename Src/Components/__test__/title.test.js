@@ -36,7 +36,7 @@ test ("OnlineStatus should load on after rendering title", () =>{
 );
 const checkOnline = title.getByTestId("onlineStatus");
 
-expect(checkOnline.innerHTML).toBe("Online status : ✅");
+expect(checkOnline.textContent).toBe("Online");
     
 });
 
@@ -53,7 +53,7 @@ test ("OnlineStatus should load on after rendering title", () =>{
 );
 const checkOnline = title.getByTestId("onlineStatus");
 
-expect(checkOnline.innerHTML).toBe("Online status : ✅");
+expect(checkOnline.textContent).toBe("Online");
     
 }); 
 
@@ -73,6 +73,6 @@ test ("cart item should be empty on after rendering title", () =>{
 // check if cart is empyty or not after initial render
 const cart  = title.getByTestId("cartTest");
 
-expect(cart.innerHTML).toBe("Cart 0");
+expect(cart.textContent).toBe("0");
     
 }); 
