@@ -24,7 +24,7 @@ import { UserProvider } from "../utils/UserContext";
 /* Register service worker for PWA / offline support */
 if ("serviceWorker" in navigator) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register(new URL("../sw.js", import.meta.url)).catch((err) => {
+    navigator.serviceWorker.register(new URL("../sw.js")).catch((err) => {
       console.warn("Service worker registration failed:", err);
     });
   });
@@ -41,6 +41,7 @@ const AppLayout = () => {
     <Provider store = {store}> 
     <UserProvider>
     <>
+  
       <Header />
       <main className="app-shell">
         <Outlet />

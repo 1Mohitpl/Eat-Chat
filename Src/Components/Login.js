@@ -1,5 +1,5 @@
 import { useState, useContext } from "react";
-import { useNavigate, useLocation, Navigate } from "react-router-dom";
+import { useNavigate, useLocation, Navigate, Link } from "react-router-dom";
 import { loginUser, registerUser } from "../../utils/auth";
 import UserContext from "../../utils/UserContext";
 import TextField from "@mui/material/TextField";
@@ -142,12 +142,19 @@ const LogInPage = () => {
       <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-[#e8590c]/30 to-transparent" />
 
       <header className="relative flex items-center justify-center py-6 animate-fade-down">
-        <span className="flex items-center gap-3 select-none">
+        <Link
+          to="/"
+          onClick={(e) => {
+            if (!loggedIn) e.preventDefault();
+          }}
+          className="flex items-center gap-3 select-none"
+          aria-label="BeYuumi home"
+        >
           <span className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-[#ff7a1a] to-[#c93a0a] text-white shadow-lg shadow-[#e8590c]/30">
             <RestaurantOutlinedIcon fontSize="small" />
           </span>
           <img src={LOGO} alt="BeYuumi" className="h-7 w-auto" />
-        </span>
+        </Link>
       </header>
 
       <main className="relative flex-1 w-full max-w-6xl mx-auto grid lg:grid-cols-2 items-center gap-12 px-6 py-2">

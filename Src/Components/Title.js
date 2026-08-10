@@ -46,15 +46,15 @@ const BOTTOM_TABS = [
 ];
 
 const Title = () => (
-  <a href="/" className="shrink-0">
-    <img
-      data-testid="logo"
-      className="logo"
-      src="https://themes.muffingroup.com/be/recipes3/wp-content/uploads/2022/12/berecipes3.svg"
-      alt="BeYuumi"
-    />
-  </a>
-);
+    <Link to="/" className="shrink-0">
+      <img
+        data-testid="logo"
+        className="logo"
+        src="https://themes.muffingroup.com/be/recipes3/wp-content/uploads/2022/12/berecipes3.svg"
+        alt="BeYuumi"
+      />
+    </Link>
+  );
 
 /* Desktop nav links — hidden on mobile, shown via drawer instead */
 const DesktopNav = () => (

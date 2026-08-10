@@ -105,6 +105,14 @@ const Toast = ({ toast, onClose }) => {
 const ItemImage = ({ src, alt, className, isVeg }) => {
   const [loaded, setLoaded] = useState(false);
   const [failed, setFailed] = useState(false);
+  const imgRef = useRef(null);
+
+  useEffect(() => {
+    const el = imgRef.current;
+    if (el && el.complete) {
+      setLoaded(true);
+    }
+  }, [src]);
 
   return (
     <div className={`relative rounded-2xl overflow-hidden bg-slate-100 ${className}`}>
@@ -119,9 +127,10 @@ const ItemImage = ({ src, alt, className, isVeg }) => {
       ) : (
         src && (
           <img
+            ref={imgRef}
             src={src}
             alt={alt}
-            loading="lazy"
+            referrerpolicy="no-referrer"
             onLoad={() => setLoaded(true)}
             onError={() => { setLoaded(true); setFailed(true); }}
             className={`w-full h-full object-cover transition-opacity duration-300 ${loaded ? "opacity-100" : "opacity-0"}`}

@@ -6,7 +6,7 @@
  * navigation fails while offline.
  */
 
-const CACHE_NAME = "beyuumi-v1";
+const CACHE_NAME = "beyuumi-v2";
 
 const OFFLINE_HTML = `<!DOCTYPE html>
 <html lang="en">
