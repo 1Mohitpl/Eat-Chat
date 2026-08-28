@@ -20,9 +20,7 @@ import SportsBarOutlinedIcon from "@mui/icons-material/SportsBarOutlined";
 import ScheduleOutlinedIcon from "@mui/icons-material/ScheduleOutlined";
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import heroFoodImg from "../imgs/hero-food.jpg";
-
-const LOGO =
-  "https://themes.muffingroup.com/be/recipes3/wp-content/uploads/2022/12/berecipes3.svg";
+import Logo from "./Logo";
 
 const ACCENT = "#e8590c";
 const ACCENT_SOFT = "rgba(232, 89, 12, 0.14)";
@@ -147,13 +145,10 @@ const LogInPage = () => {
           onClick={(e) => {
             if (!loggedIn) e.preventDefault();
           }}
-          className="flex items-center gap-3 select-none"
+          className="flex items-center select-none"
           aria-label="BeYuumi home"
         >
-          <span className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-[#ff7a1a] to-[#c93a0a] text-white shadow-lg shadow-[#e8590c]/30">
-            <RestaurantOutlinedIcon fontSize="small" />
-          </span>
-          <img src={LOGO} alt="BeYuumi" className="h-7 w-auto" />
+          <Logo height={46} />
         </Link>
       </header>
 
@@ -356,12 +351,12 @@ const LogInPage = () => {
                 />
                 {!isRegister && (
                   <div className="flex justify-end mt-2">
-                    <button
-                      type="button"
+                    <Link
+                      to="/login/forgot-password"
                       className="text-[0.8rem] font-semibold text-[#b45309] transition-colors hover:text-[#e8590c]"
                     >
                       Forgot password?
-                    </button>
+                    </Link>
                   </div>
                 )}
               </div>

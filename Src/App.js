@@ -17,14 +17,19 @@ import InstaFresh from "./Components/Instamart";
 import {Provider} from "react-redux";
 import store from "../utils/store";
 import Login from "./Components/Login";
+import ForgotPassword from "./Components/ForgotPassword";
+import ResetPassword from "./Components/ResetPassword";
 import Account from "./Components/Account";
+import TrackOrder from "./Components/TrackOrder";
 import ProtectedRoute from "./Components/ProtectedRoute";
 import { UserProvider } from "../utils/UserContext";
 
-/* Register service worker for PWA / offline support */
-if ("serviceWorker" in navigator) {
+/* Register service worker for PWA / offline support — never on localhost,
+   where cache-first serving hides fresh code during development */
+const isLocalhost = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(window.location.hostname);
+if ("serviceWorker" in navigator && !isLocalhost) {
   window.addEventListener("load", () => {
-    navigator.serviceWorker.register(new URL("../sw.js")).catch((err) => {
+    navigator.serviceWorker.register(new URL("../sw.js", import.meta.url)).catch((err) => {
       console.warn("Service worker registration failed:", err);
     });
   });
@@ -70,8 +75,16 @@ const appRouter = createBrowserRouter([
     element: <AuthLayout />,
     children: [
       {
-        path: "", // lowercase path
+        path: "",
         element: <Login/>,
+      },
+      {
+        path: "forgot-password",
+        element: <ForgotPassword />,
+      },
+      {
+        path: "reset-password/:token",
+        element: <ResetPassword />,
       },
     ],
   },
@@ -108,6 +121,11 @@ const appRouter = createBrowserRouter([
       },
 
       {
+        path: "order/:orderId",
+        element: <ProtectedRoute><TrackOrder /></ProtectedRoute>,
+      },
+
+      {
         path: "account", // lowercase path
         element: <Account/>,
       },
@@ -118,7 +136,7 @@ const appRouter = createBrowserRouter([
       },
 
       {
-        path: "InstaFresh", // lowercase path
+        path: "instafresh",
         element: (  
             <Suspense fallback={<Shimmer/>}> 
                   <InstaFresh />

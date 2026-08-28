@@ -3,6 +3,7 @@ import { Link, NavLink } from "react-router-dom";
 import useOnline from "../../utils/useOnline";
 import UserContext from "../../utils/UserContext";
 import { useSelector } from "react-redux";
+import Logo from "./Logo";
 
 const ACCENT = "#ff6b00";
 
@@ -34,7 +35,7 @@ const NAV_LINKS = [
   { label: "Home", to: "/" },
   { label: "About", to: "/about" },
   { label: "Contact", to: "/contact" },
-  { label: "InstaFresh", to: "/instaFresh" },
+  { label: "InstaFresh", to: "/instafresh" },
   { label: "Careers", to: "/careers" },
 ];
 
@@ -46,13 +47,8 @@ const BOTTOM_TABS = [
 ];
 
 const Title = () => (
-    <Link to="/" className="shrink-0">
-      <img
-        data-testid="logo"
-        className="logo"
-        src="https://themes.muffingroup.com/be/recipes3/wp-content/uploads/2022/12/berecipes3.svg"
-        alt="BeYuumi"
-      />
+    <Link to="/" className="shrink-0" aria-label="BeYuumi home">
+      <Logo className="logo" />
     </Link>
   );
 

@@ -1,5 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
-  <rect width="512" height="512" rx="110" fill="#0f172a"/>
-  <circle cx="256" cy="256" r="170" fill="#ff6b00"/>
-  <text x="256" y="336" font-family="Manrope, Inter, sans-serif" font-size="200" font-weight="800" fill="#ffffff" text-anchor="middle">B</text>
+  <rect width="512" height="512" rx="150" fill="#ff6b00"/>
+  <g transform="translate(-16,0)">
+    <g stroke="#ffffff" stroke-width="29" stroke-linecap="round" fill="none">
+      <path d="M173 141v51a38 38 0 0 0 77 0v-51"/>
+      <path d="M211 154v64"/>
+      <path d="M211 230v141"/>
+    </g>
+    <ellipse cx="339" cy="195" rx="48" ry="61" fill="#ffffff"/>
+    <path d="M339 262v109" stroke="#ffffff" stroke-width="29" stroke-linecap="round"/>
+  </g>
 </svg>

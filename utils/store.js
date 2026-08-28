@@ -1,35 +1,57 @@
 import { configureStore } from "@reduxjs/toolkit";
 import Cartslice from "./cartslice";
+import Ordersslice from "./orderslice";
 
 const loadCartFromStorage = () => {
    try {
       const raw = localStorage.getItem("cart");
       const items = raw ? JSON.parse(raw) : [];
-      return { cart: { items } };
+      return { items: Array.isArray(items) ? items : [] };
    } catch (e) {
-      return { cart: { items: [] } };
+      return { items: [] };
    }
 };
 
-const preloadedState = typeof window !== "undefined" ? loadCartFromStorage() : undefined;
+const loadOrdersFromStorage = () => {
+   try {
+      const raw = localStorage.getItem("beyuumi_orders");
+      const orders = raw ? JSON.parse(raw) : [];
+      return { orders: Array.isArray(orders) ? orders : [] };
+   } catch (e) {
+      return { orders: [] };
+   }
+};
+
+const preloadedState =
+   typeof window !== "undefined"
+      ? { cart: loadCartFromStorage(), orders: loadOrdersFromStorage() }
+      : undefined;
 
 const Store = configureStore({
    reducer: {
       cart: Cartslice,
+      orders: Ordersslice,
    },
    preloadedState,
 });
 
-// Persist cart changes to localStorage
-let previous = Store.getState().cart;
+// Persist cart + orders changes to localStorage
+let previous = Store.getState();
 Store.subscribe(() => {
-   const current = Store.getState().cart;
-   if (current !== previous) {
-      try {
-         localStorage.setItem("cart", JSON.stringify(current.items || []));
-      } catch (e) {}
-      previous = current;
-   }
+   const current = Store.getState();
+   if (current === previous) return;
+   try {
+      if (current.cart !== previous.cart) {
+         localStorage.setItem("cart", JSON.stringify(current.cart.items || []));
+      }
+      if (current.orders !== previous.orders) {
+         localStorage.setItem(
+            "beyuumi_orders",
+            JSON.stringify(current.orders.orders || [])
+         );
+      }
+   } catch (e) {}
+   previous = current;
 });
 
 export default Store;

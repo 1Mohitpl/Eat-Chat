@@ -2,9 +2,7 @@ import { useContext } from "react";
 import { Link } from "react-router-dom";
 import UserContext from "../../utils/UserContext";
 
-const ACCENT = "#ff6b00";
-const NAVY = "#0f172a";
-const NAVY_SOFT = "#1e293b";
+const NAVY_DEEP = "#0b0f19";
 
 const Svg = ({ d, className = "", strokeWidth = 2 }) => (
   <svg
@@ -36,17 +34,17 @@ const ICON = {
   pin: "M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0ZM12 13a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z",
   phone:
     "M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z",
-  mail: "M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Zm18 2-10 7L2 8M22 18l-7-5M2 18l7-5",
+  mail: "M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2Zm18 2-10 7L2 8",
   arrowUpRight: "M7 17 17 7M7 7h10v10",
+  arrowUp: "M12 19V5M5 12l7-7 7 7",
   apple:
     "M12 2c.8 0 2.5.27 3.9 1.03 1.1.6 1.9 1.4 2.3 2.3.9 2.9-.2 6.6-2.3 8.6-1.3 1.25-2.5 1.2-3.9.4-.4-.2-.8-.2-1.2 0-1.4.8-2.6.85-3.9-.4-2.1-2-3.2-5.7-2.3-8.6.4-.9 1.2-1.7 2.3-2.3C9.5 2.27 11.2 2 12 2Zm-4.4 4.5a2.8 2.8 0 0 0-2.3 1.2c-1.9 2.6 1.8 6.8 4 6.8 0-2.6 1.1-5.8 2.5-7.1a2.9 2.9 0 0 0-2.2.3c-.6.35-1.15.45-2 .3ZM16.1 8.6c.4-1.6.2-3.4-.6-4.8",
-  play:
-    "M5 3l14 9-14 9V3Z",
+  play: "M5 3l14 9-14 9V3Z",
   shield:
     "M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10Z M9 12l2 2 4-4",
   heart:
     "M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78Z",
-  glob: 
+  glob:
     "M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20Zm-10-10h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10Z",
 };
 
@@ -57,7 +55,7 @@ const LINK_COLUMNS = [
       { label: "About us", to: "/about", external: false },
       { label: "Careers", to: "/careers", external: false },
       { label: "Contact us", to: "/contact", external: false },
-      { label: "InstaFresh", to: "/instaFresh", external: false },
+      { label: "InstaFresh", to: "/instafresh", external: false },
       { label: "Login / Signup", to: "/login", external: false },
     ],
   },
@@ -92,33 +90,28 @@ const SOCIALS = [
 
 const PAYMENT_TEXT = ["UPI", "VISA", "Mastercard", "RuPay", "Net Banking", "COD"];
 
+const LINK_CLS =
+  "inline-block text-[13.5px] text-slate-400 transition-all duration-200 hover:translate-x-1 hover:text-white";
+
 const Column = ({ data }) => (
   <div>
-    <h4 className="text-white font-display font-bold text-[15px] tracking-tight">
+    <h4 className="text-[11px] font-bold uppercase tracking-[0.16em] text-slate-500">
       {data.title}
     </h4>
-    <ul className="mt-4 space-y-2.5">
-      {data.links.map((link) =>
-        link.external ? (
-          <li key={link.label}>
-            <a
-              href="#"
-              className="text-[13.5px] text-slate-400 hover:text-white transition-colors"
-            >
+    <ul className="mt-5 space-y-3">
+      {data.links.map((link) => (
+        <li key={link.label}>
+          {link.external ? (
+            <a href="#" className={LINK_CLS}>
               {link.label}
             </a>
-          </li>
-        ) : (
-          <li key={link.label}>
-            <Link
-              to={link.to}
-              className="text-[13.5px] text-slate-400 hover:text-white transition-colors"
-            >
+          ) : (
+            <Link to={link.to} className={LINK_CLS}>
               {link.label}
             </Link>
-          </li>
-        )
-      )}
+          )}
+        </li>
+      ))}
     </ul>
   </div>
 );
@@ -126,15 +119,15 @@ const Column = ({ data }) => (
 const StoreBadge = ({ store }) => (
   <a
     href="#"
-    className="inline-flex items-center gap-2.5 rounded-xl px-4 py-2.5 transition-all duration-200 hover:-translate-y-0.5 hover:ring-white/40 active:scale-95"
+    className="inline-flex items-center gap-2.5 rounded-xl px-4 py-2.5 transition-all duration-200 hover:-translate-y-0.5 hover:bg-white/[0.09] active:scale-95"
     style={{
-      background: "rgba(255,255,255,0.06)",
-      border: "1px solid rgba(255,255,255,0.14)",
+      background: "rgba(255,255,255,0.05)",
+      border: "1px solid rgba(255,255,255,0.12)",
     }}
   >
     <Svg d={store === "apple" ? ICON.apple : ICON.play} className="w-5 h-5 text-white" />
     <span className="leading-tight text-left">
-      <span className="block text-[9px] uppercase tracking-wider text-slate-400">
+      <span className="block text-[9px] uppercase tracking-wider text-slate-500">
         {store === "apple" ? "Download on the" : "Get it on"}
       </span>
       <span className="block text-[13px] font-bold text-white">
@@ -151,134 +144,122 @@ const Footer = () => {
   const year = new Date().getFullYear();
 
   return (
-    <footer className="relative mt-auto" style={{ background: NAVY }}>
-      {/* subtle top brand accent bar */}
-      <div className="h-[3px] w-full" style={{ background: `linear-gradient(90deg, ${ACCENT}, #ff7a1a, ${ACCENT})` }} />
+    <footer className="relative mt-auto overflow-hidden" style={{ background: NAVY_DEEP }}>
+      {/* ambient glows */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -top-36 left-1/2 h-80 w-[42rem] -translate-x-1/2 rounded-full opacity-[0.16] blur-3xl bg-brand"
+      />
+      <div
+        aria-hidden
+        className="pointer-events-none absolute -bottom-44 -right-28 h-80 w-[26rem] rounded-full opacity-[0.07] blur-3xl bg-brand"
+      />
+      <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-brand/70 to-transparent" />
 
-      {/* newsletter strip */}
-      <div className="border-b border-white/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
-          <div className="max-w-md">
-            <h3 className="text-white font-display text-xl sm:text-2xl font-extrabold tracking-tight">
-              Get <span style={{ color: ACCENT }}>fresh bites</span> in your inbox
-            </h3>
-            <p className="mt-1.5 text-sm text-slate-400">
-              New restaurants, trending dishes and exclusive offers — no spam, just flavour.
-            </p>
-          </div>
-          <form
-            onSubmit={(e) => e.preventDefault()}
-            className="w-full lg:w-auto flex items-center gap-2.5 bg-white rounded-full p-1.5 shadow-lg"
-          >
-            <input
-              type="email"
-              placeholder="Enter your email"
-              aria-label="Email address"
-              className="flex-1 lg:w-[280px] h-10 px-4 rounded-full text-sm text-slate-800 placeholder-slate-400 focus:outline-none bg-transparent"
-            />
-            <button
-              type="submit"
-              className="shrink-0 h-10 px-5 rounded-full text-white text-sm font-bold transition-all duration-200 active:scale-95 hover:brightness-110"
-              style={{ background: ACCENT, boxShadow: "0 6px 16px rgba(255,107,0,0.35)" }}
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 pb-10">
+        {/* newsletter glass panel */}
+        <div className="rounded-3xl border border-white/10 bg-white/[0.04] p-6 sm:p-8 backdrop-blur-sm">
+          <div className="flex flex-col gap-6 lg:flex-row lg:items-center lg:justify-between">
+            <div className="max-w-md">
+              <h3 className="font-display text-xl sm:text-2xl font-extrabold tracking-tight text-white">
+                Get <span className="text-brand">fresh bites</span> in your inbox
+              </h3>
+              <p className="mt-1.5 text-sm text-slate-400">
+                New restaurants, trending dishes and exclusive offers — no spam, just flavour.
+              </p>
+            </div>
+            <form
+              onSubmit={(e) => e.preventDefault()}
+              className="w-full lg:w-auto flex items-center gap-2.5 rounded-full bg-white p-1.5 shadow-lg shadow-black/30"
             >
-              Subscribe
-            </button>
-          </form>
-        </div>
-      </div>
-
-      {/* main link grid */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-10">
-          {/* brand column */}
-          <div className="lg:col-span-4">
-            <div className="flex items-center gap-3">
-              <span
-                className="grid h-11 w-11 place-items-center rounded-2xl text-white"
-                style={{ background: ACCENT, boxShadow: "0 8px 20px rgba(255,107,0,0.35)" }}
+              <input
+                type="email"
+                placeholder="Enter your email"
+                aria-label="Email address"
+                className="h-10 flex-1 lg:w-[280px] rounded-full bg-transparent px-4 text-sm text-slate-800 placeholder-slate-400 focus:outline-none"
+              />
+              <button
+                type="submit"
+                className="shrink-0 h-10 rounded-full bg-brand px-6 text-sm font-bold text-white transition-all duration-200 hover:bg-brand-strong hover:brightness-110 active:scale-95"
               >
+                Subscribe
+              </button>
+            </form>
+          </div>
+        </div>
+
+        {/* main grid */}
+        <div className="mt-14 grid grid-cols-2 gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-12">
+          <div className="col-span-2 lg:col-span-4">
+            <div className="flex items-center gap-3">
+              <span className="grid h-11 w-11 place-items-center rounded-2xl bg-gradient-to-br from-brand to-brand-deep text-white shadow-lg shadow-brand/30">
                 <Svg d={ICON.brand} className="w-6 h-6" strokeWidth={1.75} />
               </span>
               <div>
-                <p className="font-display text-white text-xl font-extrabold tracking-tight">
-                  Be<span style={{ color: ACCENT }}>Yuumi</span>
+                <p className="font-display text-xl font-extrabold tracking-tight text-white">
+                  Be<span className="text-brand">Yuumi</span>
                 </p>
-                <p className="text-[11px] uppercase tracking-[0.18em] text-slate-500 font-semibold">
+                <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-slate-500">
                   Food delivers joy
                 </p>
               </div>
             </div>
 
-            <p className="mt-5 text-sm leading-relaxed text-slate-400 max-w-xs">
-              Order from neighbourhood favourites, track your food live, and enjoy
-              doorstep delivery in minutes. Fresh, fast and always delicious.
+            <p className="mt-5 max-w-xs text-sm leading-relaxed text-slate-400">
+              Order from neighbourhood favourites, track your food live, and enjoy doorstep
+              delivery in minutes. Fresh, fast and always delicious.
             </p>
 
-            {/* trust row */}
-            <div className="mt-5 flex items-center gap-4 text-slate-400">
+            <div className="mt-5 flex flex-wrap items-center gap-4 text-slate-400">
               <span className="inline-flex items-center gap-1.5 text-xs font-semibold">
-                <Svg d={ICON.shield} className="w-4 h-4" style={{ color: ACCENT }} />
+                <Svg d={ICON.shield} className="h-4 w-4 text-brand" />
                 100% Secure payments
               </span>
               <span className="inline-flex items-center gap-1.5 text-xs font-semibold">
-                <Svg d={ICON.heart} className="w-4 h-4" style={{ color: ACCENT }} />
+                <Svg d={ICON.heart} className="h-4 w-4 text-brand" />
                 Loved by 1000s
               </span>
             </div>
 
-            {/* socials */}
-            <div className="mt-6">
-              <p className="text-[11px] uppercase tracking-[0.18em] text-slate-500 font-semibold mb-3">
-                Follow us
-              </p>
-              <div className="flex items-center gap-2.5">
-                {SOCIALS.map((s) => (
-                  <a
-                    key={s.label}
-                    href="#"
-                    aria-label={s.label}
-                    className="grid h-10 w-10 place-items-center rounded-full text-slate-400 transition-all duration-200 hover:text-white hover:-translate-y-0.5"
-                    style={{ border: "1px solid rgba(255,255,255,0.14)", background: "rgba(255,255,255,0.04)" }}
-                  >
-                    <Svg d={s.icon} className="w-[18px] h-[18px]" strokeWidth={1.75} />
-                  </a>
-                ))}
-              </div>
-
-              {/* app badges */}
-              <div className="mt-6 flex flex-wrap items-center gap-2.5">
-                <StoreBadge store="apple" />
-                <StoreBadge store="google" />
-              </div>
+            <div className="mt-6 flex items-center gap-2.5">
+              {SOCIALS.map((s) => (
+                <a
+                  key={s.label}
+                  href="#"
+                  aria-label={s.label}
+                  className="grid h-10 w-10 place-items-center rounded-full text-slate-400 transition-all duration-200 hover:-translate-y-1 hover:border-brand/50 hover:bg-brand/10 hover:text-brand"
+                  style={{ border: "1px solid rgba(255,255,255,0.12)", background: "rgba(255,255,255,0.03)" }}
+                >
+                  <Svg d={s.icon} className="h-[18px] w-[18px]" strokeWidth={1.75} />
+                </a>
+              ))}
             </div>
           </div>
 
-          {/* link columns */}
-          <div className="sm:col-span-2 lg:col-span-6 grid grid-cols-2 sm:grid-cols-3 gap-8">
+          <div className="col-span-2 grid grid-cols-2 gap-8 sm:col-span-2 sm:grid-cols-3 lg:col-span-6">
             {LINK_COLUMNS.map((col) => (
               <Column key={col.title} data={col} />
             ))}
           </div>
 
-          {/* contact column */}
-          <div className="lg:col-span-2">
-            <h4 className="text-white font-display font-bold text-[15px] tracking-tight">
+          <div className="col-span-2 lg:col-span-2">
+            <h4 className="text-[11px] font-bold uppercase tracking-[0.16em] text-slate-500">
               Get in touch
             </h4>
-            <ul className="mt-4 space-y-3.5 text-[13.5px] text-slate-400">
+            <ul className="mt-5 space-y-3.5 text-[13.5px] text-slate-400">
               <li className="flex items-start gap-2.5">
-                <Svg d={ICON.pin} className="w-4 h-4 mt-0.5" style={{ color: ACCENT }} />
+                <Svg d={ICON.pin} className="mt-0.5 h-4 w-4 text-brand" />
                 <span>Raiganj, West Bengal, India</span>
               </li>
               <li className="flex items-start gap-2.5">
-                <Svg d={ICON.mail} className="w-4 h-4 mt-0.5" style={{ color: ACCENT }} />
-                <a href={`mailto:${email}`} className="hover:text-white transition-colors break-all">
+                <Svg d={ICON.mail} className="mt-0.5 h-4 w-4 text-brand" />
+                <a href={`mailto:${email}`} className="break-all transition-colors hover:text-white">
                   {email}
                 </a>
               </li>
               <li className="flex items-start gap-2.5">
-                <Svg d={ICON.phone} className="w-4 h-4 mt-0.5" style={{ color: ACCENT }} />
-                <a href="tel:+919000000000" className="hover:text-white transition-colors">
+                <Svg d={ICON.phone} className="mt-0.5 h-4 w-4 text-brand" />
+                <a href="tel:+919000000000" className="transition-colors hover:text-white">
                   +91 90000 00000
                 </a>
               </li>
@@ -286,57 +267,62 @@ const Footer = () => {
 
             <a
               href="#"
-              className="mt-6 inline-flex items-center gap-2 text-[13px] font-bold"
-              style={{ color: ACCENT }}
+              className="mt-6 inline-flex items-center gap-2 text-[13px] font-bold text-brand transition-all duration-200 hover:gap-3"
             >
               Help centre
-              <Svg d={ICON.arrowUpRight} className="w-3.5 h-3.5" />
+              <Svg d={ICON.arrowUpRight} className="h-3.5 w-3.5" />
             </a>
           </div>
         </div>
       </div>
 
-      {/* payment strip */}
-      <div className="border-t border-white/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-wrap items-center justify-between gap-4">
+      {/* payments strip */}
+      <div className="relative border-t border-white/10">
+        <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-4 px-4 py-5 sm:px-6 lg:px-8">
           <p className="text-xs text-slate-500">We accept</p>
           <div className="flex flex-wrap items-center gap-2">
             {PAYMENT_TEXT.map((p) => (
               <span
                 key={p}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] font-bold text-slate-300 uppercase tracking-wide"
-                style={{ border: "1px solid rgba(255,255,255,0.12)", background: "rgba(255,255,255,0.04)" }}
+                className="inline-flex items-center rounded-lg px-3 py-1.5 text-[11px] font-bold uppercase tracking-wide text-slate-300 transition-colors hover:text-white"
+                style={{ border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.03)" }}
               >
                 {p}
               </span>
             ))}
           </div>
+          <span className="inline-flex items-center gap-1.5 text-xs text-slate-500">
+            <Svg d={ICON.glob} className="h-3.5 w-3.5" />
+            India (English)
+          </span>
         </div>
       </div>
 
       {/* bottom bar */}
-      <div className="border-t border-white/10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col sm:flex-row items-center justify-between gap-3">
-          <p className="text-xs text-slate-500 flex items-center gap-1.5">
-            © {year} BeYuumi | Developed with
-            <Svg d={ICON.heart} className="w-3.5 h-3.5" style={{ color: "#fb7185" }} />
+      <div className="relative border-t border-white/10">
+        <div className="max-w-7xl mx-auto flex flex-col items-center justify-between gap-4 px-4 py-6 sm:flex-row sm:px-6 lg:px-8">
+          <p className="flex items-center gap-1.5 text-xs text-slate-500">
+            © {year} BeYuumi · Crafted with
+            <Svg d={ICON.heart} className="h-3.5 w-3.5 animate-pulse text-rose-400" />
             by {name}
           </p>
-          <p className="text-xs text-slate-500">
-            <a href={`mailto:${email}`} className="hover:text-white transition-colors">
+          <div className="flex items-center gap-3 text-xs text-slate-500">
+            <a href="#" className="transition-colors hover:text-white">Privacy</a>
+            <span className="h-1 w-1 rounded-full bg-slate-700" />
+            <a href="#" className="transition-colors hover:text-white">Terms</a>
+            <span className="h-1 w-1 rounded-full bg-slate-700" />
+            <a href={`mailto:${email}`} className="transition-colors hover:text-white">
               {email}
             </a>
-          </p>
-          <div className="flex items-center gap-3 text-xs text-slate-500">
-            <a href="#" className="hover:text-white transition-colors">Privacy</a>
-            <span className="w-1 h-1 rounded-full bg-slate-600" />
-            <a href="#" className="hover:text-white transition-colors">Terms</a>
-            <span className="w-1 h-1 rounded-full bg-slate-600" />
-            <span className="inline-flex items-center gap-1.5">
-              <Svg d={ICON.glob} className="w-3.5 h-3.5" />
-              India (English)
-            </span>
           </div>
+          <button
+            type="button"
+            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+            aria-label="Back to top"
+            className="grid h-9 w-9 place-items-center rounded-full border border-white/10 bg-white/[0.04] text-slate-400 transition-all duration-200 hover:-translate-y-1 hover:border-brand/50 hover:bg-brand/10 hover:text-brand"
+          >
+            <Svg d={ICON.arrowUp} className="h-4 w-4" />
+          </button>
         </div>
       </div>
     </footer>

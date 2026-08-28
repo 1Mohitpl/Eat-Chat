@@ -9,6 +9,7 @@ import {
   addItem,
 } from "../../utils/cartslice";
 import { computeCartTotals, FREE_DELIVERY_THRESHOLD } from "../../utils/cartTotals";
+import { PRODUCTS } from "../mocks/groceries";
 
 const fmt = (v) => `\u20B9${(v / 100).toLocaleString("en-IN")}`;
 const img_cdn =
@@ -811,7 +812,7 @@ const SUGGESTED = [
   { id: "sug-5", name: "Chocolate Gateau", price: 10900, isVeg: true, rating: "4.6", imageId: "https://www.themealdb.com/images/media/meals/tqtywx1468317395.jpg" },
 ];
 
-const FrequentlyOrdered = ({ onAdd, onToast }) => (
+const FrequentlyOrdered = ({ items, onAdd, onToast }) => (
   <div className="mt-6">
     <div className="flex items-center gap-3 mb-4">
       <h3 className="font-display font-bold text-lg tracking-tight" style={{ color: "#111" }}>
@@ -820,18 +821,20 @@ const FrequentlyOrdered = ({ onAdd, onToast }) => (
       <div className="flex-1 h-px bg-slate-200" />
     </div>
     <div className="flex gap-4 overflow-x-auto pb-3 scrollbar-none -mx-1 px-1">
-      {SUGGESTED.map((s) => (
+      {items.map((s) => (
         <div
           key={s.id}
           className="w-[176px] shrink-0 rounded-2xl bg-white overflow-hidden transition-all duration-300 hover:-translate-y-1 hover:shadow-lg"
           style={{ border: "1px solid #f1f1f1", boxShadow: "0 2px 12px rgba(0,0,0,0.05)" }}
         >
           <div className="relative h-[112px] bg-slate-100">
-            <ItemImage src={s.imageId} alt={s.name} isVeg={s.isVeg} className="w-full h-[112px]" />
-            <span className="absolute bottom-2 right-2 inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-white/95 text-[10px] font-bold text-emerald-600 shadow-sm">
-              <Svg d={ICON.star} className="w-2.5 h-2.5" style={{ fill: "#10b981" }} />
-              {s.rating}
-            </span>
+            <ItemImage src={getImageUrl(s.imageId)} alt={s.name} isVeg={s.isVeg} className="w-full h-[112px]" />
+            {s.rating && (
+              <span className="absolute bottom-2 right-2 inline-flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-white/95 text-[10px] font-bold text-emerald-600 shadow-sm">
+                <Svg d={ICON.star} className="w-2.5 h-2.5" style={{ fill: "#10b981" }} />
+                {s.rating}
+              </span>
+            )}
           </div>
           <div className="p-3">
             <p className="text-[13px] font-bold text-slate-900 truncate">{s.name}</p>
@@ -948,6 +951,26 @@ const Cart = () => {
     [cartItems]
   );
 
+  const hasGrocery = useMemo(
+    () => cartItems.some((it) => it.info?.isGrocery),
+    [cartItems]
+  );
+
+  // cart-aware upsell: grocery carts suggest groceries, restaurant carts suggest dishes
+  const upsellItems = useMemo(() => {
+    if (!hasGrocery) return SUGGESTED;
+    return PRODUCTS.filter((p) => !cartItems.some((c) => c.info.id === p.id))
+      .slice(0, 5)
+      .map((p) => ({
+        id: p.id,
+        name: p.name,
+        price: p.price,
+        isVeg: true,
+        isGrocery: true,
+        imageId: p.image,
+      }));
+  }, [hasGrocery, cartItems]);
+
   const handleClear = useCallback(() => {
     if (confirmingClear) {
       dispatch(clearCart());
@@ -1061,15 +1084,15 @@ const Cart = () => {
               </div>
 
               <Link
-                to="/"
+                to={hasGrocery ? "/instafresh" : "/"}
                 className="group flex items-center justify-center gap-3 w-full h-12 rounded-full border-2 border-dashed text-sm font-semibold transition-all hover:border-[#ff6b00] hover:text-[#ff6b00] hover:bg-orange-50/50 active:scale-[0.99]"
                 style={{ borderColor: "#e5e7eb", color: "#6b7280" }}
               >
                 <Svg d={ICON.plus} className="w-4 h-4 transition-transform group-hover:scale-110" strokeWidth={2.5} />
-                Browse More Dishes
+                {hasGrocery ? "Browse More Groceries" : "Browse More Dishes"}
               </Link>
 
-              <FrequentlyOrdered onAdd={handleSuggestedAdd} onToast={setToast} />
+              <FrequentlyOrdered items={upsellItems} onAdd={handleSuggestedAdd} onToast={setToast} />
             </div>
 
             <div className="hidden lg:block lg:col-span-4">

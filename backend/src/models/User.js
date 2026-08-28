@@ -1,46 +1,35 @@
-const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
+const { pool } = require("../config/db");
 
-const userSchema = new mongoose.Schema(
-  {
-    name: {
-      type: String,
-      required: [true, "Name is required"],
-      trim: true,
-      maxlength: [50, "Name cannot be more than 50 characters"],
-    },
-    email: {
-      type: String,
-      required: [true, "Email is required"],
-      unique: true,
-      lowercase: true,
-      trim: true,
-      match: [
-        /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/,
-        "Please provide a valid email",
-      ],
-    },
-    password: {
-      type: String,
-      required: [true, "Password is required"],
-      minlength: [6, "Password must be at least 6 characters"],
-      select: false,
-    },
-  },
-  {
-    timestamps: true,
-  }
-);
-
-userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next();
+const createUser = async ({ name, email, password }) => {
   const salt = await bcrypt.genSalt(10);
-  this.password = await bcrypt.hash(this.password, salt);
-  next();
-});
-
-userSchema.methods.matchPassword = async function (enteredPassword) {
-  return bcrypt.compare(enteredPassword, this.password);
+  const hash = await bcrypt.hash(password, salt);
+  const { rows } = await pool.query(
+    `INSERT INTO users (name, email, password)
+     VALUES ($1, $2, $3)
+     RETURNING id, name, email, created_at AS "createdAt"`,
+    [name.trim(), email.toLowerCase().trim(), hash]
+  );
+  return rows[0];
 };
 
-module.exports = mongoose.model("User", userSchema);
+const findUserByEmail = async (email, { includePassword = false } = {}) => {
+  const { rows } = await pool.query(
+    `SELECT id, name, email, created_at AS "createdAt"${includePassword ? ", password" : ""}
+     FROM users WHERE email = $1`,
+    [email.toLowerCase().trim()]
+  );
+  return rows[0];
+};
+
+const findUserById = async (id) => {
+  const { rows } = await pool.query(
+    `SELECT id, name, email, created_at AS "createdAt" FROM users WHERE id = $1`,
+    [id]
+  );
+  return rows[0];
+};
+
+const comparePassword = (entered, hash) => bcrypt.compare(entered, hash);
+
+module.exports = { createUser, findUserByEmail, findUserById, comparePassword };

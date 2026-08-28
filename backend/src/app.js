@@ -5,6 +5,7 @@ const path = require("path");
 require("dotenv").config({ path: path.join(__dirname, "..", ".env") });
 
 const authRoutes = require("./routes/authRoutes");
+const orderRoutes = require("./routes/orderRoutes");
 const logger = require("./config/logger");
 const {
   requestLogger,
@@ -32,6 +33,9 @@ app.get("/", (req, res) => {
       register: "POST /api/auth/register",
       login: "POST /api/auth/login",
       profile: "GET /api/auth/profile",
+      forgotPassword: "POST /api/auth/forgot-password",
+      resetPassword: "POST /api/auth/reset-password",
+      orders: "GET|POST /api/orders, GET /api/orders/:id",
     },
   });
 });
@@ -41,6 +45,7 @@ app.get("/api/health", (req, res) => {
 });
 
 app.use("/api/auth", authRoutes);
+app.use("/api/orders", orderRoutes);
 
 app.use(notFound);
 app.use(errorHandler);

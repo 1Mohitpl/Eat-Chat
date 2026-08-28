@@ -19,7 +19,8 @@ test ("logo should load on after rendering title", () =>{
 );
 const logo = title.getAllByTestId("logo");
 
-expect(logo[0].src).toBe("https://themes.muffingroup.com/be/recipes3/wp-content/uploads/2022/12/berecipes3.svg");
+expect(logo.length).toBe(1);
+expect(logo[0].getAttribute("aria-label")).toBe("BeYuumi — food delivers joy");
      
 })
 

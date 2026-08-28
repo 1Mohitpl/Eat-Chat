@@ -25,6 +25,8 @@ const cartslice = createSlice({
             name: newItem.name || "Unknown Food",
             price: Number(newItem.price) || 0,
             ratings: newItem.ratings || {},
+            isVeg: newItem.isVeg !== false,
+            isGrocery: !!newItem.isGrocery,
           },
           quantity: 1,
         });

@@ -3,14 +3,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faCircleCheck,
   faLocationDot,
   faMoneyBillWave,
   faMobileScreenButton,
 } from "@fortawesome/free-solid-svg-icons";
 import UserContext from "../../utils/UserContext";
 import { clearCart } from "../../utils/cartslice";
+import { placeOrder } from "../../utils/orderslice";
 import { computeCartTotals, formatCurrency } from "../../utils/cartTotals";
+import { createOrder } from "../../utils/auth";
 
 const PAYMENT_METHODS = [
   { id: "COD", label: "Cash on Delivery", icon: faMoneyBillWave },
@@ -23,9 +24,9 @@ const Checkout = () => {
   const navigate = useNavigate();
   const cartItems = useSelector((store) => store.cart.items || []);
 
-  const [step, setStep] = useState("form"); // "form" | "placing" | "success"
-  const [order, setOrder] = useState(null);
+  const [step, setStep] = useState("form"); // "form" | "placing"
   const [errors, setErrors] = useState({});
+  const [orderError, setOrderError] = useState("");
   const [form, setForm] = useState({
     name: user?.name || "",
     phone: "",
@@ -52,64 +53,31 @@ const Checkout = () => {
     return Object.keys(nextErrors).length === 0;
   };
 
-  const handlePlaceOrder = (e) => {
+  const handlePlaceOrder = async (e) => {
     e.preventDefault();
     if (!validate()) return;
 
     setStep("placing");
-    const placedOrder = {
-      id: `ORD${Date.now().toString().slice(-8)}`,
-      total: totals.grandTotal,
+    setOrderError("");
+    const id = `ORD${Date.now().toString().slice(-8)}`;
+    const details = {
+      name: form.name.trim(),
+      phone: form.phone.trim(),
       address: form.address.trim(),
       paymentMethod: form.paymentMethod,
     };
 
-    // simulate order processing — no real payment/order backend exists yet
-    setTimeout(() => {
-      setOrder(placedOrder);
+    try {
+      // persist to the database, scoped to the logged-in user
+      const order = await createOrder({ id, items: cartItems, totals, ...details });
+      dispatch(placeOrder(order));
       dispatch(clearCart());
-      setStep("success");
-    }, 1200);
+      navigate(`/order/${id}`, { replace: true });
+    } catch (err) {
+      setOrderError(err.message || "Could not place the order. Please try again.");
+      setStep("form");
+    }
   };
-
-  if (step === "success" && order) {
-    return (
-      <div className="min-h-[60vh] flex items-center justify-center px-6 py-16">
-        <div className="text-center max-w-md">
-          <div className="w-20 h-20 mx-auto mb-6 rounded-full bg-lime-100 flex items-center justify-center">
-            <FontAwesomeIcon icon={faCircleCheck} className="text-4xl text-lime-600" />
-          </div>
-          <h2 className="text-2xl font-bold text-slate-900">Order placed!</h2>
-          <p className="text-slate-500 mt-2">
-            Your order <span className="font-semibold text-slate-700">#{order.id}</span> has
-            been confirmed and will arrive in 30-40 mins.
-          </p>
-          <div className="mt-6 bg-slate-50 rounded-3xl border border-slate-200 p-5 text-left text-sm space-y-2">
-            <div className="flex justify-between">
-              <span className="text-slate-500">Delivering to</span>
-              <span className="font-medium text-slate-900 text-right max-w-[60%]">{order.address}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="text-slate-500">Payment method</span>
-              <span className="font-medium text-slate-900">
-                {order.paymentMethod === "COD" ? "Cash on Delivery" : "UPI"}
-              </span>
-            </div>
-            <div className="flex justify-between border-t border-slate-200 pt-2">
-              <span className="font-semibold text-slate-900">Total Paid</span>
-              <span className="font-bold text-slate-900">{formatCurrency(order.total)}</span>
-            </div>
-          </div>
-          <Link
-            to="/"
-            className="inline-flex items-center gap-2 mt-6 px-6 py-3 rounded-3xl bg-lime-500 text-white font-semibold transition hover:bg-lime-600"
-          >
-            Back to Home
-          </Link>
-        </div>
-      </div>
-    );
-  }
 
   if (!cartItems.length) {
     return (
@@ -240,6 +208,11 @@ const Checkout = () => {
             </div>
           </div>
           <div className="p-6 pt-0 space-y-3">
+            {orderError && (
+              <p className="text-red-600 text-sm bg-red-50 border border-red-200 rounded-2xl px-4 py-2.5">
+                {orderError}
+              </p>
+            )}
             <button
               type="submit"
               disabled={step === "placing"}

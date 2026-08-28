@@ -6,7 +6,7 @@
  * navigation fails while offline.
  */
 
-const CACHE_NAME = "beyuumi-v2";
+const CACHE_NAME = "beyuumi-v3";
 
 const OFFLINE_HTML = `<!DOCTYPE html>
 <html lang="en">
@@ -65,20 +65,20 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
+  // Network-first: fresh content wins while online; cache is the offline
+  // fallback only. (Cache-first here previously served stale bundles forever.)
   event.respondWith(
-    caches.match(request).then((cached) => {
-      if (cached) return cached;
-
-      return fetch(request)
-        .then((response) => {
-          // Cache successful same-origin GETs for future offline use.
-          if (response && response.ok && new URL(request.url).origin === self.location.origin) {
-            const clone = response.clone();
-            caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
-          }
-          return response;
-        })
-        .catch(() => {
+    fetch(request)
+      .then((response) => {
+        if (response && response.ok && new URL(request.url).origin === self.location.origin) {
+          const clone = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
+        }
+        return response;
+      })
+      .catch(() =>
+        caches.match(request).then((cached) => {
+          if (cached) return cached;
           if (request.mode === "navigate") {
             return new Response(OFFLINE_HTML, {
               status: 200,
@@ -86,7 +86,7 @@ self.addEventListener("fetch", (event) => {
             });
           }
           return new Response("", { status: 504, statusText: "Offline" });
-        });
-    })
+        })
+      )
   );
 });
